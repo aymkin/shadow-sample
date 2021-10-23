@@ -1,21 +1,93 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from "react";
+import { Text, View, StyleSheet } from "react-native";
+import Slider from "@react-native-community/slider";
 
-export default function App() {
+const ShadowPropSlider = ({ label, value, ...props }) => {
+  return (
+    <>
+      <Text>
+        {label} ({value.toFixed(2)})
+      </Text>
+      <Slider step={1} value={value} {...props} />
+    </>
+  );
+};
+
+const App = () => {
+  const [shadowOffsetWidth, setShadowOffsetWidth] = useState(0);
+  const [shadowOffsetHeight, setShadowOffsetHeight] = useState(0);
+  const [shadowRadius, setShadowRadius] = useState(20);
+  const [shadowOpacity, setShadowOpacity] = useState(0.2);
+
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+      <View
+        style={[
+          styles.square,
+          {
+            shadowOffset: {
+              width: shadowOffsetWidth,
+              height: -shadowOffsetHeight,
+            },
+            shadowOpacity,
+            shadowRadius,
+          },
+        ]}
+        renderToHardwareTextureAndroid={true}
+      />
+      <View style={styles.controls}>
+        <ShadowPropSlider
+          label="shadowOffset - X"
+          minimumValue={-50}
+          maximumValue={50}
+          value={shadowOffsetWidth}
+          onValueChange={(val) => setShadowOffsetWidth(val)}
+        />
+        <ShadowPropSlider
+          label="shadowOffset - Y"
+          minimumValue={-50}
+          maximumValue={50}
+          value={shadowOffsetHeight}
+          onValueChange={(val) => setShadowOffsetHeight(val)}
+        />
+        <ShadowPropSlider
+          label="shadowRadius"
+          minimumValue={0}
+          maximumValue={100}
+          value={shadowRadius}
+          onValueChange={(val) => setShadowRadius(val)}
+        />
+        <ShadowPropSlider
+          label="shadowOpacity"
+          minimumValue={0}
+          maximumValue={1}
+          step={0.05}
+          value={shadowOpacity}
+          onValueChange={(val) => setShadowOpacity(val)}
+        />
+      </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: "space-around",
+    backgroundColor: "#ecf0f1",
+    padding: 8,
+  },
+  square: {
+    alignSelf: "center",
+    backgroundColor: "white",
+    borderRadius: 4,
+    height: 150,
+    shadowColor: "black",
+    width: 150,
+  },
+  controls: {
+    paddingHorizontal: 12,
   },
 });
+
+export default App;
