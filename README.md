@@ -1,3 +1,5 @@
+An issue on RN repo https://github.com/facebook/react-native/issues/32465
+
 steps to reporduce
 
 - expo init shadowSample
